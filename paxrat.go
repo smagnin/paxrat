@@ -393,7 +393,6 @@ func runWatcher(watcher *fsnotify.Watcher, config *Config) {
 		select {
 		case ev := <-watcher.Events:
 			if ev.Op == fsnotify.Create {
-				log.Printf("CONFIG SETTINGS: %+v\n", (*config).Settings[ev.Name])
 				watcher.Add(ev.Name)
 				if verbosevar {
 					log.Printf("File created: %s\n", ev.Name)
