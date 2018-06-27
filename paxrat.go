@@ -417,7 +417,6 @@ func runWatcher(watcher *fsnotify.Watcher, config *Config) {
 			log.Printf("watch mode watcher error: %s\n", err)
 		}
 	}
-	return
 }
 
 func main() {
