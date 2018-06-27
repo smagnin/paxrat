@@ -21,6 +21,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/coreos/go-systemd/daemon"
 	"github.com/fsnotify/fsnotify"
 )
 
@@ -388,6 +389,7 @@ func initWatcher(config *Config) (*fsnotify.Watcher, error) {
 
 // TODO: Resolve some corner cases like watches not set after create, delete, create, move
 func runWatcher(watcher *fsnotify.Watcher, config *Config) {
+	daemon.SdNotify(false, "READY=1")
 	log.Println("Starting paxrat watcher")
 	for {
 		select {
@@ -482,6 +484,7 @@ func main() {
 		if watchvar {
 			watcher, err := initWatcher(mergedConfig)
 			if err != nil {
+				daemon.SdNotify(false, "STOPPING=1")
 				log.Fatalf("Could not initialize watcher: %s\n", err)
 			}
 			runWatcher(watcher, mergedConfig)
