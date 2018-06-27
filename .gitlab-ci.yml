@@ -1,0 +1,27 @@
+image: golang:1.8
+
+stages:
+  - test
+  - doc
+  - build
+
+before_script:
+  - export GOPATH=$CI_PROJECT_DIR/..
+  - rm -rf $GOPATH/src
+  - mkdir -p $GOPATH/src
+  - cp -a $CI_PROJECT_DIR/ $GOPATH/src
+  - cd $CI_PROJECT_DIR/../src/$CI_PROJECT_NAME
+  - go clean
+  - go get -v ./...
+
+test:
+  stage: test
+  script:
+    - go fmt  $(go list ./... | grep -v /vendor/)
+    - go vet  $(go list ./... | grep -v /vendor/)
+    - go test -race $(go list ./... | grep -v /vendor/)
+
+build:
+  stage: build
+  script:
+    - go build
